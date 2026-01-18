@@ -134,9 +134,14 @@ namespace spriteHandler
 
         const std::string textureFilename = "resources/assets/shared/images/characters/" + getImagePathFromCharacter(fullAnimationName);
 
+        if (sf::Image image; !image.loadFromFile(textureFilename))
+        {
+            std::cerr << "Cannot load texture from: " << textureFilename << std::endl;
+        }
+
         auto& anim = animIt->second;
         sf::Texture texture(
-            textureFilename,
+            imagePath,
             false,
             sf::IntRect({
                 anim.at("x"),

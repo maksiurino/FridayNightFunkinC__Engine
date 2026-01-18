@@ -14,20 +14,22 @@ int main()
 
     int volume = 75;
 
+    //auto bfSprites = spriteHandler::getTexturesFromCharacterPath("BOYFRIEND");
+
     string currentSong = "bopeebo";
     string currentSongVariant = "";
 
     Music inst(getInstPath(currentSong, currentSongVariant));
     inst.setVolume(static_cast<float>(volume));
 
-    std::map<std::string, sf::SoundBuffer> vocalBuffers;
+    std::map<std::string, SoundBuffer> vocalBuffers;
     std::map<std::string, Sound> vocals;
 
-    vocalBuffers["bf"] = sf::SoundBuffer(musicHandler::getVocalPath(currentSong, currentSongVariant, "bf"));
-    vocalBuffers["dad"] = sf::SoundBuffer(musicHandler::getVocalPath(currentSong, currentSongVariant, "dad"));
+    vocalBuffers["bf"] = SoundBuffer(getVocalPath(currentSong, currentSongVariant, "bf"));
+    vocalBuffers["dad"] = SoundBuffer(getVocalPath(currentSong, currentSongVariant, "dad"));
 
-    vocals.emplace("bf", sf::Sound(vocalBuffers["bf"]));
-    vocals.emplace("dad", sf::Sound(vocalBuffers["dad"]));
+    vocals.emplace("bf", Sound(vocalBuffers["bf"]));
+    vocals.emplace("dad", Sound(vocalBuffers["dad"]));
 
     vocals.at("bf").setVolume(static_cast<float>(volume));
     vocals.at("dad").setVolume(static_cast<float>(volume));
@@ -38,10 +40,10 @@ int main()
 
     string currentAnim = "BF idle dance";
 
-    sf::Texture texture = spriteHandler::getAnimationFromCharacter("BOYFRIEND", currentAnim, 0);
+    Texture texture = spriteHandler::getAnimationFromCharacter("BOYFRIEND", currentAnim, 0);
 
-    sf::Sprite character(texture);
-    character.setScale(sf::Vector2f{0.5, 0.5});
+    Sprite character(texture);
+    character.setScale(Vector2f{0.5, 0.5});
 
     bool song_playing = true;
 
@@ -51,11 +53,11 @@ int main()
     {
         while (const optional event = window.pollEvent())
         {
-            if (event->is<sf::Event::Closed>())
+            if (event->is<Event::Closed>())
             {
                 window.close();
             }
-            if (event->is<sf::Event::FocusLost>())
+            if (event->is<Event::FocusLost>())
             {
                 if (song_playing)
                 {
@@ -64,7 +66,7 @@ int main()
                     vocals.at("dad").pause();
                 }
             }
-            if (event->is<sf::Event::FocusGained>())
+            if (event->is<Event::FocusGained>())
             {
                 if (song_playing)
                 {
@@ -75,7 +77,7 @@ int main()
             }
         }
 
-        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)))
+        if ((Keyboard::isKeyPressed(Keyboard::Key::Enter) || Keyboard::isKeyPressed(Keyboard::Key::Escape)))
         {
             if (pause_press_counter == 0)
             {
