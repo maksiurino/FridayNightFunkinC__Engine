@@ -58,12 +58,26 @@ namespace spriteHandler
         std::map<std::string, std::map<std::string, int>> textures;
 
         const std::string basePath =
-            "resources/assets/shared/images/characters/" + characterName;
-        doc.LoadFile((basePath + ".xml").c_str());
+            "resources/assets/shared/images/characters/" + characterName + ".xml";
+        if (doc.LoadFile(basePath.c_str()) != XML_SUCCESS)
+        {
+            std::cout << "XML file wasn't loaded properly. Here's the path: " << basePath << std::endl;
+            return "";
+        }
 
         const XMLElement* atlas = doc.FirstChildElement("TextureAtlas");
+        if (!atlas)
+        {
+            std::cout << "Cannot find TextureAtlas" << std::endl;
+            return "";
+        }
 
         const char* imagePath = atlas->Attribute("imagePath");
+        if (!imagePath)
+        {
+            std::cout << "Cannot find attribute imagePath in TextureAtlas" << std::endl;
+            return "";
+        }
 
         return imagePath;
     }
@@ -92,8 +106,7 @@ namespace spriteHandler
             std::filesystem::path(basePath).parent_path().string() +
             "/" + imagePath;
 
-        sf::Image image;
-        if (!image.loadFromFile(fullImagePath))
+        if (sf::Image image; !image.loadFromFile(fullImagePath))
             return textures;
 
         for (XMLElement* sub = atlas->FirstChildElement("SubTexture");
@@ -116,32 +129,30 @@ namespace spriteHandler
                 {"height", h}
             };
 
-            textures.emplace(name, std::move(map));
+            textures.emplace(name, map);
         }
 
         return textures;
     }
 
-    sf::Texture getAnimationFromCharacter(const std::string& characterName, const std::string& animationName, const int& animationFrame)
+    sf::Texture getAnimationFromCharacter(const std::string& characterName, const std::string& animationName, const int& animationFrame, std::map<std::string, std::map<std::string, int>>& textures)
     {
-        std::string imagePath;
-        std::map<std::string, std::map<std::string, int>> textures = spriteHandler::getTextureDefinitionsFromCharacter(characterName);
         const std::string fullAnimationName = animationName + toFourDigits(animationFrame);
-        std::cout << fullAnimationName << std::endl;
         const auto animIt = textures.find(fullAnimationName);
         if (animIt == textures.end())
             throw std::runtime_error("Animation not found: " + fullAnimationName);
 
-        const std::string textureFilename = "resources/assets/shared/images/characters/" + getImagePathFromCharacter(fullAnimationName);
+        const std::string textureFilename = "resources/assets/shared/images/characters/" + getImagePathFromCharacter(characterName);
 
-        if (sf::Image image; !image.loadFromFile(textureFilename))
+        sf::Image image;
+        if (!image.loadFromFile(textureFilename))
         {
             std::cerr << "Cannot load texture from: " << textureFilename << std::endl;
         }
 
         auto& anim = animIt->second;
         sf::Texture texture(
-            imagePath,
+            image,
             false,
             sf::IntRect({
                 anim.at("x"),

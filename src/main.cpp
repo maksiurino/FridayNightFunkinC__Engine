@@ -14,7 +14,22 @@ int main()
 
     int volume = 75;
 
-    //auto bfSprites = spriteHandler::getTexturesFromCharacterPath("BOYFRIEND");
+    window.clear(Color::Green);
+
+    Font font(R"(C:\Windows\Fonts\Arial.ttf)");
+    Text text(font);
+
+    text.setString("Loading...");
+    text.setFillColor(Color::White);
+    text.setOutlineColor(Color::Black);
+    text.setOutlineThickness(5);
+    text.setCharacterSize(50);
+
+    window.draw(text);
+
+    window.display();
+
+    auto bfSprites = spriteHandler::getTexturesFromCharacterPath("BOYFRIEND");
 
     string currentSong = "bopeebo";
     string currentSongVariant = "";
@@ -34,16 +49,18 @@ int main()
     vocals.at("bf").setVolume(static_cast<float>(volume));
     vocals.at("dad").setVolume(static_cast<float>(volume));
 
+    string currentAnim = "BF idle dance";
+
+    std::map<std::string, std::map<std::string, int>> textures = spriteHandler::getTextureDefinitionsFromCharacter("BOYFRIEND");
+
+    float currentAnimationFrame = 0;
+
+    Sprite character(bfSprites.at(currentAnim + spriteHandler::toFourDigits(static_cast<int>(currentAnimationFrame))));
+    character.setScale(Vector2f{0.5, 0.5});
+
     inst.play();
     vocals.at("bf").play();
     vocals.at("dad").play();
-
-    string currentAnim = "BF idle dance";
-
-    Texture texture = spriteHandler::getAnimationFromCharacter("BOYFRIEND", currentAnim, 0);
-
-    Sprite character(texture);
-    character.setScale(Vector2f{0.5, 0.5});
 
     bool song_playing = true;
 
@@ -100,10 +117,18 @@ int main()
             pause_press_counter = 0;
         }
 
-        window.clear();
+        window.clear(Color::White);
+
+        character.setTexture(bfSprites.at(currentAnim + spriteHandler::toFourDigits(static_cast<int>(currentAnimationFrame))));
 
         window.draw(character);
 
         window.display();
+
+        currentAnimationFrame += 0.5f;
+        if (currentAnimationFrame > 13)
+        {
+            currentAnimationFrame = 0;
+        }
     }
 }

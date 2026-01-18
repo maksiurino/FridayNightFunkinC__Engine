@@ -1,0 +1,13 @@
+{
+  "texture": "BOYFRIEND",
+  "animations": {
+    "idle": {
+      "assetId": "BF idle dance",
+      "animationRange": [0, 13]
+    },
+    "singLEFT": {
+      "assetId": "BF NOTE LEFT",
+      "animationRange": [0, 14]
+    }
+  }
+}

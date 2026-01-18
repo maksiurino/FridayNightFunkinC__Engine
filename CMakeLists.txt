@@ -20,6 +20,12 @@ FetchContent_Declare(
         GIT_TAG 11.0.0
 )
 FetchContent_MakeAvailable(tinyxml2)
+# --- JSON (Nlohmann) ---
+FetchContent_Declare(nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(nlohmann_json)
 
 add_executable(FridayNightFunkinC__Engine src/main.cpp
         src/musicHandler.cpp
@@ -33,6 +39,7 @@ target_link_libraries(FridayNightFunkinC__Engine PRIVATE
         SFML::Graphics
         SFML::Audio
         tinyxml2
+        nlohmann_json::nlohmann_json
 )
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT FridayNightFunkinC__Engine)
