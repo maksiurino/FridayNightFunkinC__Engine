@@ -4,6 +4,7 @@
 
 #include "musicHandler.hpp"
 #include "spriteHandler.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace sf; using namespace std; using namespace musicHandler;
 
